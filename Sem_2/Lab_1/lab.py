@@ -27,20 +27,22 @@ class TuringMachine:
 
             ('end_find', '='): ('append_result', '=', 'R'),
             ('append_result', '_'): ('append_result', '|', 'R')
-
         }
+
+    def gui(self):
+        print(f"{' ' * (self.head_position)}▼")
+
 
     def run(self):
         # Выполнение программы
         while self.current_state != 'halt':
             if self.head_position >= len(self.tape):
                 self.tape.append('_')
+            self.gui()
             current_symbol = self.tape[self.head_position] 
             if (self.current_state, current_symbol) in self.rules:
                 new_state, new_symbol, move = self.rules[(self.current_state, current_symbol)]
-                print(new_symbol, self.current_state, new_symbol, self.result_count)
                 print(''.join(self.tape))
-                print(len(self.tape), self.head_position)
                 if new_symbol == '|':
                     self.count += 1
                 elif new_symbol == '=':
@@ -71,6 +73,11 @@ class TuringMachine:
         # Вывод результата
         print(''.join(self.tape))
         print(self.m_count, self.n_count)
+
+def input_check(inp_str):
+    st = list(set(inp_str))
+    if len(st) == 4:
+        pass
 
 if __name__ == "__main__":
     input_tape = input("Введите ленту (например, '|||A|||B='): ")
