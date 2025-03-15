@@ -7,7 +7,7 @@ class TuringMachine:
         self.m_count = 0
         self.n_count = 0
         self.count = 0
-        self.result_count = 1
+        self.result_count = 0
         self.rules = {
             # Начальное состояние: ищем первое число
             ('start', '|'): ('first_num', '|', 'R'),
@@ -72,14 +72,22 @@ class TuringMachine:
 
         # Вывод результата
         print(''.join(self.tape))
-        print(self.m_count, self.n_count)
 
 def input_check(inp_str):
-    st = list(set(inp_str))
-    if len(st) == 4:
-        pass
+    st = list(set(list(inp_str)))
+    if len(st) in (4, 3):
+        if sorted(st) == sorted(('|', 'A', 'B', '=')):
+            return True
+        if sorted(st) == sorted(('A', 'B', '=')):
+            return True
+    return False
 
 if __name__ == "__main__":
-    input_tape = input("Введите ленту (например, '|||A|||B='): ")
+    while True:
+        input_tape = input("Введите ленту (например, '|||A|||B='): ")
+        if input_check(input_tape):
+            break
+        else:
+            print("Введите ленту правильно")
     tm = TuringMachine(input_tape)
     tm.run()
