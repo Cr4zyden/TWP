@@ -8,25 +8,23 @@ class TuringMachine:
         self.n_count = 0
         self.count = 0
         self.rules = {
-            # Начальное состояние: ищем первое число (m)
+            # Начальное состояние: ищем первое число
             ('start', '|'): ('first_num', '|', 'R'),
             ('start', 'A'): ('start', 'A', 'R'),
             ('start', 'B'): ('start', 'B', 'R'),
             ('start', '='): ('start', '=', 'R'),
 
-            # Ищем конец первого числа (m), помеченного 'A'
+            # Ищем конец первого числа '
             ('first_num', '|'): ('first_num', '|', 'R'),
             ('first_num', 'A'): ('second_num', 'A', 'R'),
             ('first_num', 'B'): ('second_num', 'B', 'R'),
-            # Ищем начало второго числа (n), помеченного 'B'
+            # Ищем начало второго числа'
             
             ('second_num', '|'): ('second_num', '|', 'R'),
             ('second_num', 'B'): ('end_find', 'B', 'R'),
             ('second_num', 'A'): ('end_find', 'A', 'R'),
 
-
-            # Ищем конец второго числа (n), помеченного 'B'
-            ('find_n_end', '='): ('halt', '=', 'S'),
+            ('end_find', '='): ('halt', '=', 'S'),
 
         }
 
@@ -37,13 +35,18 @@ class TuringMachine:
             if (self.current_state, current_symbol) in self.rules:
                 new_state, new_symbol, move = self.rules[(self.current_state, current_symbol)]
                 print(new_symbol, self.current_state)
+                if new_symbol == '|':
+                    self.count += 1
 
                 if self.head_position < len(self.tape):
                     self.tape[self.head_position] = new_symbol
-                    if new_symbol == '|' and self.current_state in ('find_m_end', 'start'):
-                        self.m_count += 1
-                    elif new_symbol == '|' and self.current_state == ('find_n_end', 'find_n_end'):
-                        self.n_count += 1
+                    if self.current_state in ('first_num', 'second_num'):
+                        if new_symbol == 'A':
+                            self.m_count = self.count
+                            self.count = 0
+                        elif new_symbol == 'B':
+                            self.n_count = self.count
+                            self.count = 0 
                 else:
                     self.tape.append(new_symbol)  # Расширяем ленту, если нужно
                 
