@@ -9,7 +9,7 @@ enum LeftState {
     L_A,
     L_X,
     L_INVALID,
-    L_ACCEPT  // Единое конечное состояние
+    L_END  //конечное состояние
 };
 
 // Состояния для правой головки
@@ -26,10 +26,15 @@ bool is_balanced(const string &word) {
     int head1 = 0;
     int head2 = word.size() - 1;
     int balance = 0;
-
-    while (l_state != L_INVALID && r_state != R_INVALID && l_state != L_ACCEPT && head1 < head2) {
+    bool ans = false;
+    
+    while (l_state != L_INVALID && r_state != R_INVALID && l_state != L_END) {
         // Обработка левой головки
-        if (l_state != L_ACCEPT && head1 <= head2) {
+        if(head1 >= head2){
+            l_state = L_END;
+      
+        }
+        if (l_state != L_END && head1 <= head2) {
             char c = word[head1];
             switch (l_state) {
                 case L_START:
@@ -98,13 +103,8 @@ bool is_balanced(const string &word) {
             }
         }
 
-        // Проверка условий для перехода в ACCEPT
-        if (head1 > head2 && balance == 0) {
-            l_state = L_ACCEPT;
-        }
     }
-
-    return l_state == L_ACCEPT;
+    return balance==0;
 }
 
 int main() {
